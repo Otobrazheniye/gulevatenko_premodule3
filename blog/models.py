@@ -11,10 +11,17 @@ class Topic(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+# SQL
+# CREATE TABLE blog_topic (
+#     id BIGSERIAL PRIMARY KEY,
+#     name VARCHAR(100) NOT NULL,
+#     created_at TIMESTAMP WITH TIME ZONE NOT NULL
+# );
+
 
 class Article(models.Model):
-    author = models.ForeignKey(User,related_name="articles",on_delete=models.CASCADE)
-    topics = models.ManyToManyField(Topic,related_name="articles",blank = False)
+    author = models.ForeignKey(User,on_delete=models.CASCADE,related_name="articles")
+    topics = models.ManyToManyField(Topic,related_name="articles")
 
     title = models.CharField(max_length=200)
 
@@ -29,8 +36,9 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    author = models.ForeignKey(User,related_name="comments",on_delete=models.CASCADE)
-    article = models.ForeignKey(Article,related_name="comments",on_delete=models.CASCADE)
+    author = models.ForeignKey(User,on_delete=models.CASCADE,related_name="comments")
+    article = models.ForeignKey(Article,on_delete=models.CASCADE,related_name="comments")
 
     def __str__(self):
-        return f"Comment by {self.author} \n\t{self.text}"
+        return f"Comment by {self.author} on {self.article}"
+
