@@ -5,7 +5,76 @@ Profile
 {% endblock %}
 
 {% block content %}
-<h1>Main Page</h1>
+<h1>Profile</h1>
 
-<p>Here will be list all pages</p>
+{% if not user.is_authenticated %}
+    <p>Please log in to view your profile.</p>
+    <a href="{% url 'login' %}">Log in</a>
+{% else %}
+
+    <h2>User Info</h2>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+
+    <hr>
+
+    <h2>My Subscriptions</h2>
+
+    {% if user_topics %}
+        <ul>
+            {% for topic in user_topics %}
+                <li>
+                    <a href="{% url 'topic_detail' topic.id %}">
+                        {{ topic.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have not subscribed to any topics yet.</p>
+        <a href="{% url 'topic_list' %}">Browse topics</a>
+    {% endif %}
+
+    <hr>
+
+    <h2>My Articles</h2>
+
+    {% if user_articles %}
+        {% for article in user_articles %}
+            <article>
+                <h3>
+                    <a href="{% url 'article_detail' article.id %}">
+                        {{ article.title }}
+                    </a>
+                </h3>
+                <p>{{ article.content|truncatechars:50 }}</p>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>You have not written any articles yet.</p>
+    {% endif %}
+
+    <hr>
+
+    <h2>My Comments</h2>
+
+    {% if user_comments %}
+        {% for comment in user_comments %}
+            <div>
+                <p>{{ comment.text }}</p>
+                <small>
+                    On article:
+                    <a href="{% url 'article_detail' comment.article.id %}">
+                        {{ comment.article.title }}
+                    </a>
+                </small>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>You have not written any comments yet.</p>
+    {% endif %}
+
+{% endif %}
+
 {% endblock %}

@@ -1,11 +1,30 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Article Archive
+Archive {{ year }}/{{ month }}
 {% endblock %}
 
 {% block content %}
-<h1>Main Page</h1>
+<h1>Archive for {{ year }}/{{ month }}</h1>
 
-<p>Here will be list all pages</p>
+{% if articles %}
+    {% for article in articles %}
+        <article>
+            <h2>
+                <a href="{% url 'article_detail' article.id %}">
+                    {{ article.title }}
+                </a>
+            </h2>
+
+            <p>{{ article.content|truncatechars:50 }}</p>
+            <p>Author: {{ article.author }}</p>
+        </article>
+
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>There are no articles for this month.</p>
+    <a href="{% url 'article_list' %}">Back to home</a>
+{% endif %}
+
 {% endblock %}

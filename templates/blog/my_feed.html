@@ -1,10 +1,63 @@
 {% extends 'base.html' %}
 
 {% block title %}
-My Feed
+My feed
 {% endblock %}
 
 {% block content %}
-<h1>Main Page</h1>
-<p>Here will be list all pages</p>
+<h1>My feed</h1>
+
+{% if not user.is_authenticated %}
+    <p>If you want see feed, need auth.</p>
+    <a href="{% url 'login' %}">Enter</a>
+
+{% elif not user_topics %}
+    <p> You are not subscibe on topic .</p>
+    <a href="{% url 'topic_list' %}">Enter to topics</a>
+
+{% elif articles %}
+    <p>Your Subscribe:</p>
+
+    <ul>
+        {% for topic in user_topics %}
+            <li>
+                <a href="{% url 'topic_detail' topic.id %}">
+                    {{ topic.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    {% for article in articles %}
+        <article>
+            <h2>
+                <a href="{% url 'article_detail' article.id %}">
+                    {{ article.title }}
+                </a>
+            </h2>
+
+            <p>{{ article.content|truncatechars:50 }}</p>
+
+            <p>Author: {{ article.author }}</p>
+
+            <p>
+                Topics:
+                {% for topic in article.topics.all %}
+                    <a href="{% url 'topic_detail' topic.id %}">
+                        {{ topic.name }}
+                    </a>
+                {% endfor %}
+            </p>
+        </article>
+
+        <hr>
+    {% endfor %}
+
+{% else %}
+    <p>with this topic: 0 article </p>
+    <a href="{% url 'topic_list' %}">See all topics</a>
+{% endif %}
+
 {% endblock %}
