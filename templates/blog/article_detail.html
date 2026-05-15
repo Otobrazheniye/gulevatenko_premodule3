@@ -1,11 +1,44 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Article Details
+{{ article.title}}
 {% endblock %}
 
 {% block content %}
-<h1>Main Page</h1>
+<article>
+    <h1>{{article.title}}</h1>
+    <p>
+        Author: {{ article.author }}
+    </p>
+    <p>
+        Created at:{{ article.created_at }}
+    </p>
 
-<p>Here will be list all pages</p>
+    <p>
+        Topics:
+        {% for topic in article.topics.all %}
+            <a href="{% url 'topic_detail' topic.id %}">
+                {{ topic.name }}
+            </a>
+        {% empty %}
+            <p> Without Topic </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ article.content }}
+    </p>
+</article>
+<hr>
+<section>
+    <h2>Comments</h2>
+    {% for comment in article.comments.all %}
+        <div>
+            <p>{{ comment.text }}</p>
+            <p> Author: {{ comment.author }} | {{ comment.created_at }} </p>
+            <hr>
+        </div>
+    {% empty %}
+        <p>Have not comments</p>
+    {% endfor %}
+</section>
 {% endblock %}
