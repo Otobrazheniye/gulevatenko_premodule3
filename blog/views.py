@@ -1,17 +1,30 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Article, Topic, Comment
+from django.shortcuts import render, get_object_or_404
 
 
 def article_list(request):
-    return render(request,'blog/article_list.html')
+    articles = Article.objects.all().order_by('-created_at')
 
+    context = {
+        'articles': articles,
+    }
+
+    return render(request, 'blog/article_list.html', context)
 
 def my_feed(request):
     return render(request,'blog/my_feed.html')
 
 
 def article_detail(request, article_id):
-    return render(request,'blog/article_detail.html')
+    article = get_object_or_404(Article, id=article_id)
+
+    context = {
+        'article': article,
+    }
+
+    return render(request, 'blog/article_detail.html', context)
 
 # 
 def article_comment(request, article_id):
