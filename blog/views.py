@@ -44,11 +44,25 @@ def article_create(request):
 
 
 def topic_list(request):
-    return render(request,'blog/topic_list.html')
+    topics = Topic.objects.all().order_by('name')
+
+    context = {
+        'topics': topics,
+    }
+
+    return render(request, 'blog/topic_list.html', context)
 
 
 def topic_detail(request, topic_id):
-    return render(request,'blog/topic_detail.html')
+    topic = get_object_or_404(Topic, id = topic_id)
+    articles = topic.articles.all().order_by('-created_at')
+
+    context = {
+        'topic': topic,
+        'articles': articles,
+    }
+
+    return render(request,'blog/topic_detail.html', context)
 
 # 
 def topic_subscribe(request, topic_id):

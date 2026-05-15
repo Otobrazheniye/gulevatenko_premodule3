@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Topic Details
+Topic: {{ topic.name }}
 {% endblock %}
 
 {% block content %}
-<h1>Main Page</h1>
+<h1>Topic: {{ topic.name }}</h1>
 
-<p>Here will be list all pages</p>
+
+{% for article in articles %}
+    <article>
+        <h2>
+            <a href="{% url 'article_detail' article.id %}">
+                {{ article.title }}
+            </a>
+        </h2>
+        <p>{{ article.content|truncatechars:50 }}</p>
+        <p>Author: {{ article.author }}</p>
+    </article>
+
+    <hr>
+{% empty %}
+    <p>In this topic: 0 articles</p>
+{% endfor %}
+<!-- <p>Topic id: {{ topic.id }}</p>  -->
+<!-- <p>Topic name: {{ topic.name }}</p>  -->
+<!-- <p>DEBUG TOPIC DETAIL TEMPLATE WORKS</p> -->
 {% endblock %}

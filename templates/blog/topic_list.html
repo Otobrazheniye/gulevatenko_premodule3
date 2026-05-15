@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Topic List
+Topics List
 {% endblock %}
 
 {% block content %}
-<h1>Main Page</h1>
-
-<p>Here will be list all pages</p>
+<h1>All Topics</h1>
+<ul>
+    {% for topic in topics %}
+        <li>
+            <a href="{% url 'topic_detail' topic.id %}">
+                {{topic.name}}
+            </a>
+        </li>
+    {% empty %}
+        <li>No topics yet</li>
+    {% endfor %}
+</ul>
 {% endblock %}
